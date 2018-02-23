@@ -87,18 +87,13 @@ function form_creation(){
 <h3 style="font-weight: bold;">Add music wish for event index 10 </h3>
 <div id="message_wish" style="display: none;color: green;"></div>
 <form method="post" id="traumtaenzer_form">
-Name: <input type="text" name="mw_name" placeholder="Name"><br>
-Email: <input type="text" name="mw_email" placeholder="Email"><br>
-3X Music: <input type="text" name="3xmusic" placeholder="Your wish"><br><br>
-<button type="button" id="traumtaenzer_submit">Submit</button> 
+<div class="form-group"><label>Name:</label> <input type="text" name="mw_name" id="mw_name" placeholder="Name"></div>
+<div class="form-group"><label>Email:</label> <input type="text" name="mw_email"  id="mw_email" placeholder="Email"></div>
+<div class="form-group"><label>3X Music:</label> <input type="text" name="3xmusic" id="3xmusic" placeholder="Your wish"></div>
+<button type="button" id="traumtaenzer_submit" onclick="traumtaenzer_submit_form()">Submit</button> 
 </form>
 <script type="text/javascript">
-     //jQuery('#traumtaenzer_submit').submit(function(){ 
-    jQuery("#traumtaenzer_submit").click(function(){
-       // alert('submitted');
-        add_music_wish();
-     
-  });   
+   
 function add_music_wish(){
 
     mw_name = jQuery('input[name=mw_name]').val();
@@ -119,7 +114,9 @@ function add_music_wish(){
                 },
          success: function(response) {
             console.log('complated');
-            jQuery('#message_wish').html('Thank you !!! Your wish has been added to this event');
+            thnxmsg = '<?php echo get_option( "tanzveranstaltung_options")["option_custom_message"]; ?>';
+            if(thnxmsg==''){ thnxmsg = 'Thank you. Your wish has been added for this page';}
+            jQuery('#message_wish').html(thnxmsg);
             jQuery('#message_wish').show(500);
             setTimeout(function(){ jQuery('#message_wish').hide(500);},5000);
             jQuery('#traumtaenzer_form').trigger("reset");
@@ -133,7 +130,7 @@ jQuery("#traumtaenzer_form").keydown(function(e){
             var key = (x.keyCode || x.which);       
             if(key == 13 || key == 3){
                 var button_value = jQuery('input:button').val();
-                 add_music_wish();
+                 traumtaenzer_submit_form();
                 
             }
         }
@@ -162,55 +159,48 @@ function add_mw_music() {
  
  function all_wishes($attr){
     global $wpdb;
-   $event_id = $attr['event'];
-   $mydb = new wpdb('root', '', 'traumtaenzer2', 'localhost');
-   /*$all_wishes_data = $mydb->get_results('SELECT
-   musikwunsch.mw_wunsch
-    FROM
-    musikwunsch
-    WHERE mw_veranstindex = "'.$event_id.'"	');
-   $all_wish = '<h3>All wishes for event '.$event_id.'</h3>';
-   	foreach ($all_wishes_data as $single_wish) {
-   		# code...
-   		$all_wish .= $single_wish->mw_wunsch.'<br>';
-   	}*/
-   //print_r( $query[0]);
+    $event_id = $attr['event'];
+    $mydb = new wpdb('root', '', 'traumtaenzer2', 'localhost');
    	$customPagHTML     = "";
    	$query             = "SELECT * FROM musikwunsch";
-	$total_query     = "SELECT COUNT(1) FROM (${query}) AS combined_table";
-	$total             = $mydb->get_var( $total_query );
-	$items_per_page = 4;
-	$page             = isset( $_GET['wishes'] ) ? abs( (int) $_GET['wishes'] ) : 1;
-	$offset         = ( $page * $items_per_page ) - $items_per_page;
-	$all_wishes_data         = $mydb->get_results( "SELECT
-   musikwunsch.mw_wunsch
-    FROM
-    musikwunsch
-    WHERE mw_veranstindex = '".$event_id."' ORDER BY mw_index DESC LIMIT ${offset}, ${items_per_page}" );
-	$totalPage         = ceil($total / $items_per_page);
+  	$total_query     = "SELECT COUNT(1) FROM (${query}) AS combined_table";
+  	$total             = $mydb->get_var( $total_query );
+    $items_per_page = get_option( "tanzveranstaltung_options")["option_wishes_per_page"];
+    if(empty($items_per_page)){
+      $items_per_page = 5;
+    }
+  	//$items_per_page = 5  ;
+  	$page             = isset( $_GET['wishes'] ) ? abs( (int) $_GET['wishes'] ) : 1;
+  	$offset         = ( $page * $items_per_page ) - $items_per_page;
+  	$all_wishes_data         = $mydb->get_results( "SELECT
+     musikwunsch.mw_wunsch
+      FROM
+      musikwunsch
+      WHERE mw_veranstindex = '".$event_id."' ORDER BY mw_index DESC LIMIT ${offset}, ${items_per_page}" );
+  	$totalPage         = ceil($total / $items_per_page);
 
-	$all_wish = '<h3>All wishes for event '.$event_id.'</h3>';
-   	foreach ($all_wishes_data as $single_wish) {
-   		# code...
-   		$all_wish .= $single_wish->mw_wunsch.'<br>';
-   	}
+  	$all_wish = '<div id="traumtaenzer_container"> <h3>All wishes for event '.$event_id.'</h3> <ul class="traumtaenzer-ul">';
+     	foreach ($all_wishes_data as $single_wish) {
+     		# code...
+     		$all_wish .= '<li>'.$single_wish->mw_wunsch.'</li>';
+     	}
+      $all_wish .= '</ul>';
+  	if($totalPage > 1){
+  	$customPagHTML     =  '<div><span>Page '.$page.' of '.$totalPage.'</span><div class="text-right">'.paginate_links( array(
+  	'base' => add_query_arg( 'wishes', '%#%' ),
+  	'format' => '',
+  	'prev_text' => __('&laquo;'),
+  	'next_text' => __('&raquo;'),
+  	'total' => $totalPage,
+  	'current' => $page
+  	)).'</div></div></div>';
+  	}
 
-	if($totalPage > 1){
-	$customPagHTML     =  '<div><span>Page '.$page.' of '.$totalPage.'</span><div class="text-right">'.paginate_links( array(
-	'base' => add_query_arg( 'wishes', '%#%' ),
-	'format' => '',
-	'prev_text' => __('&laquo;'),
-	'next_text' => __('&raquo;'),
-	'total' => $totalPage,
-	'current' => $page
-	)).'</div></div>';
-	}
+     $all_wish .=$customPagHTML;
+     return $all_wish;
 
-   $all_wish .=$customPagHTML;
-   return $all_wish;
-
-}
-add_shortcode('all_wishes_event', 'all_wishes');
+  }
+  add_shortcode('all_wishes_event', 'all_wishes');
 
 
 
@@ -313,3 +303,64 @@ WHERE (veranst.anzeigen = 1) and veranst.`index` = "' . $veranstindex . '"');
     return $query;
 }
 
+
+
+
+function extra_post_info_page(){
+?>
+ <div class="wrap">
+<h1>Music wishes setting</h1>
+<form method="post" action="options.php">
+
+  <?php settings_fields( 'prfx-settings-group' ); // set plugin option group for the form ?>
+
+  <?php $tanzveranstaltung_options = get_option( 'tanzveranstaltung_options' ); // get plugin options from the database ?>
+
+  
+  <table class="form-table">
+    <tbody>
+             
+      <tr valign="top">
+        <th scope="row">Number of wishes per event</th>
+        <td>
+          <input type="text" class="font-color-field" name="tanzveranstaltung_options[option_wishes_per_page]" value="<?php echo esc_attr( $tanzveranstaltung_options['option_wishes_per_page'] ); ?>" >
+        </td>
+      </tr>
+      <tr valign="top">
+        <th scope="row">Thank you message</th>
+        <td>            
+          <small>You can change  your thank you message.</small>
+          <br>
+          <textarea rows="7" cols="50" name="tanzveranstaltung_options[option_custom_message]" id="tanzveranstaltung_options[option_custom_message]"><?php echo esc_textarea( $tanzveranstaltung_options['option_custom_message'] ); ?></textarea>
+        </td>
+      </tr>
+    </tbody>  
+  </table>
+  
+  <?php @submit_button(); ?>
+
+</form>
+</div>
+<?php
+admin_data();
+}
+
+function prfx_sanitize_options( $input ) {
+  $input['option_display_mode'] = wp_filter_nohtml_kses( $input['option_display_mode'] );
+  $input['option_font_size'] = sanitize_text_field( absint( $input['option_font_size'] ) );
+  $input['option_font_color'] = sanitize_text_field( $input['option_font_color'] );
+  $input['option_custom_css'] = esc_textarea( $input['option_custom_css'] );
+  return $input;
+}
+
+function admin_data() {
+   // echo  'hello this is admin data';
+    }
+
+
+// action for registering setting options
+add_action( 'admin_init', 'prfx_register_settings' );
+// function for registering prfx setting options
+function prfx_register_settings() {
+  register_setting( 'prfx-settings-group', 'tanzveranstaltung_options', 'prfx_sanitize_options' );
+}

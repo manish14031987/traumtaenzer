@@ -2,3 +2,10 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
+ul.traumtaenzer-ul {padding: 0;list-style: none;}
+ul.traumtaenzer-ul li {border-bottom: 1px solid #ccc;padding: 0 0 10px;margin: 0 0 10px 0;}
+#traumtaenzer_container .text-right a {margin-right: 14px;}
+#traumtaenzer_form .form-group {margin-bottom: 15px;}
+#traumtaenzer_form .form-group label {display: block;margin-bottom: 5px;}
+#traumtaenzer_container .text-right {text-align: center;}
+#traumtaenzer_container .text-right {text-align: center;margin-top: 11px;}

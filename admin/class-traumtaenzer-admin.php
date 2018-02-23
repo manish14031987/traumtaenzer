@@ -59,6 +59,8 @@ class traumtaenzer_Admin {
 	 *
 	 * @since    1.0.0
 	 */
+	
+	
 	public function enqueue_styles() {
 
 		/**
@@ -99,5 +101,27 @@ class traumtaenzer_Admin {
 		wp_enqueue_script( $this->traumtaenzer, plugin_dir_url( __FILE__ ) . 'js/traumtaenzer-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
+	public function admin_data() {
+		return 'hello this is admin data';
+		}
 
+
+		public function extra_post_info_menu(){
+
+		  $page_title = 'WordPress Extra Post Info';
+		  $menu_title = 'Music Wishes';
+		  $capability = 'manage_options';
+		  $menu_slug  = 'extra-post-info';
+		  $function   = 'extra_post_info_page';
+		  $icon_url   = 'dashicons-media-code';
+		  $position   = 4;
+
+		  add_menu_page( $page_title,
+		                 $menu_title, 
+		                 $capability, 
+		                 $menu_slug, 
+		                 $function, 
+		                 $icon_url, 
+		                 $position );
+		}
 }

@@ -20,6 +20,11 @@
 	 * $( window ).load(function() {
 	 *
 	 * });
+	 */
+	//traumtaenzer_submit
+	 
+
+	 /*
 	 *
 	 * ...and/or other possibilities.
 	 *
@@ -28,5 +33,16 @@
 	 * Although scripts in the WordPress core, Plugins and Themes may be
 	 * practising this, we should strive to set a better example in our own work.
 	 */
-
+//console.log('readysdsdsd');
 })( jQuery );
+	/*function check(){
+	 	alert('hiiii');
+	 }*/
+	 function traumtaenzer_submit_form(){
+
+	 	mw_name = jQuery('#mw_name').val();
+	 	mw_email = jQuery('#mw_email').val();
+	 	xmusic = jQuery('#3xmusic').val();
+	 	//alert(mw_email + "  " + mw_email + "  " +xmusic);
+	 	 add_music_wish();
+	 };
