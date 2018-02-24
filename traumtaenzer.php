@@ -90,7 +90,7 @@ function add_mw_music() {
     $tablename='musikwunsch';
 
     $data=array(
-        'mw_veranstindex' => '10',
+        'mw_veranstindex' => $_POST['event_id'],
         'mw_name' => $_POST['mw_name'],
         'mw_email' => $_POST['mw_email'],
         'mw_wunsch' => $_POST['xmusic']);
@@ -139,4 +139,15 @@ function extra_post_info_page(){
 </div>
 <?php
 //  admin_data();
+}
+
+
+
+add_action( 'wp_ajax_mw_event_id', 'mw_event_id' );
+
+function mw_event_id() {
+  // echo "string";
+  echo do_shortcode( '[traumtaenzer_form event_id="'.$_REQUEST['event_id'].'"]' );
+  die();
+   
 }

@@ -33,9 +33,7 @@
 	 * Although scripts in the WordPress core, Plugins and Themes may be
 	 * practising this, we should strive to set a better example in our own work.
 	 */
-console.log('readysdsdsd');
-
-
+//console.log('readysdsdsd');
 })( jQuery );
 	/*function check(){
 	 	alert('hiiii');
@@ -75,6 +73,7 @@ console.log('readysdsdsd');
 		    mw_name = jQuery('input[name=mw_name]').val();
 		    mw_email = jQuery('input[name=mw_email]').val();
 		    xmusic = jQuery('input[name=3xmusic]').val();
+		    event_id = jQuery('input[name=event_id]').val();
 
 		    
 		     jQuery.ajax({
@@ -86,7 +85,8 @@ console.log('readysdsdsd');
 		                    nonce:  tanzveranstaltung_object.nonce,
 		                    mw_name: mw_name,
 		                    mw_email: mw_email,
-		                    xmusic: xmusic
+		                    xmusic: xmusic,
+		                    event_id: event_id
 		                },
 		         success: function(response) {
 		            console.log('complated');
@@ -99,7 +99,6 @@ console.log('readysdsdsd');
 		         }
 		      })
 		}
-
 		
 	 /*if(mw_email =='' || mw_name == '' || xmusic == ''){
 	 	 		jQuery('#traumtaenzer_error').html('All fill all details.');

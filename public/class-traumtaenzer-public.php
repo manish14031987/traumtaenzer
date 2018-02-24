@@ -54,9 +54,13 @@ class traumtaenzer_Public {
 		add_shortcode( 'traumtaenzer_form', array( $this, 'form_creation' ) );
 		add_shortcode( 'all_wishes_event', array( $this, 'all_wishes' ) );
 		add_action('init', array( $this, 'tanzveranstaltung_custom_rewrite_basic'));
+		
+
+		
 		add_shortcode('tt_veranstaltung', array( $this, 'tt_veranstaltung_shortcode'));
 		add_filter('query_vars', array( $this, 'tanzveranstaltung_query_vars'));
 		add_action('wp_enqueue_scripts', array( $this, 'theme_enqueue_scripts'));
+		add_action('wp_footer', array( $this, 'init_form'));
 		
 
 
@@ -111,15 +115,16 @@ class traumtaenzer_Public {
 
 	
 
-	public function form_creation() {
-		?>
-		<h3 style="font-weight: bold;">Add music wish for event index 10 </h3>
+	public function form_creation($attr) {
+		$html = '';
+		$html .='
+		<h3 style="font-weight: bold;">Add music wish for event index'. $attr['event_id'].' </h3>
 		<div id="traumtaenzer_error" style="display: none;color: red;"></div>
 		<div id="message_wish" style="display: none;color: green;"></div>
 		<form method="post" id="traumtaenzer_form">
 		<div class="form-group"><label>Name:</label> <input type="text" name="mw_name" id="mw_name" ></div>
 		<div class="form-group"><label>Email:</label> <input type="text" name="mw_email"  id="mw_email"></div>
-		<div class="form-group"><label>3X Music:</label> <input type="text" name="3xmusic" id="3xmusic" ></div>
+		<div class="form-group"><label>3X Music:</label> <input type="text" name="3xmusic" id="3xmusic" ><input type="hidden" name="event_id" id="event_id" value="'.$attr['event_id'].'" ></div>
 		<button type="button" id="traumtaenzer_submit" onclick="traumtaenzer_submit_form()">Submit</button> 
 		</form>
 		<script type="text/javascript">
@@ -129,16 +134,40 @@ class traumtaenzer_Public {
 		            var x = e || window.event;
 		            var key = (x.keyCode || x.which);       
 		            if(key == 13 || key == 3){
-		                var button_value = jQuery('input:button').val();
+		                var button_value = jQuery("input:button").val();
 		                 traumtaenzer_submit_form();
 		                
 		            }
 		        }
 		    });
+
+		</script>';
+	return $html;
+	}
+
+public function init_form($attr){
+	?>
+	<script>
+		jQuery(document).ready( function($) {
+
+				$.ajax({
+					url: "<?php echo admin_url( 'admin-ajax.php' )?>",
+					// url : tanzveranstaltung_object.ajaxurl,
+		        	data : {
+		                    action: "mw_event_id",
+		                    event_id: "<?php echo get_the_id()?>",
+		                },
+					success: function( data ) {
+						//alert( 'Your home page has ' + $(data).find('div').length + ' div elements.');
+						//console.log(data);
+						$('.page-id-10 .entry-content').append(data);
+					}
+				})
+
+			})
 		</script>
 		<?php
 	}
-
 	
  public function all_wishes($attr){
     global $wpdb;
