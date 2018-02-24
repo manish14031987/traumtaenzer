@@ -116,7 +116,7 @@ class traumtaenzer_Admin {
 		  $menu_title = 'Music Wish Setting';
 		  $capability = 'manage_options';
 		  $menu_slug  = 'extra-post-info';
-		  $function   = $this->extra_post_info_page();
+		  $function   = 'extra_post_info_page';
 		  $icon_url   = 'dashicons-media-code';
 		  $position   = 4;
 
@@ -145,46 +145,9 @@ class traumtaenzer_Admin {
 		  register_setting( 'prfx-settings-group', 'tanzveranstaltung_options', 'prfx_sanitize_options' );
 		}
 
-	public	function extra_post_info_page(){
-		?>
-		 <div class="wrap">
-		<h1>Music wishe setting</h1>
-		<form method="post" action="options.php">
-
-		  <?php settings_fields( 'prfx-settings-group' ); // set plugin option group for the form ?>
-
-		  <?php $tanzveranstaltung_options = get_option( 'tanzveranstaltung_options' ); // get plugin options from the database ?>
-
-		  
-		  <table class="form-table">
-		    <tbody>
-		             
-		      <tr valign="top">
-		        <th scope="row">Number of wishes per event</th>
-		        <td>
-		          <input type="text" class="font-color-field" name="tanzveranstaltung_options[option_wishes_per_page]" value="<?php echo esc_attr( $tanzveranstaltung_options['option_wishes_per_page'] ); ?>" >
-		        </td>
-		      </tr>
-		      <tr valign="top">
-		        <th scope="row">Thank you message</th>
-		        <td>            
-		          <small>You can change  your thank you message.</small>
-		          <br>
-		          <textarea rows="7" cols="50" name="tanzveranstaltung_options[option_custom_message]" id="tanzveranstaltung_options[option_custom_message]"><?php echo esc_textarea( $tanzveranstaltung_options['option_custom_message'] ); ?></textarea>
-		        </td>
-		      </tr>
-		    </tbody>  
-		  </table>
-		  
-		  <?php @submit_button(); ?>
-
-		</form>
-		</div>
-		<?php
-		//  admin_data();
-		}
+		
 
 
 
-
+		
 }

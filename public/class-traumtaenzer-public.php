@@ -56,6 +56,7 @@ class traumtaenzer_Public {
 		add_action('init', array( $this, 'tanzveranstaltung_custom_rewrite_basic'));
 		add_shortcode('tt_veranstaltung', array( $this, 'tt_veranstaltung_shortcode'));
 		add_filter('query_vars', array( $this, 'tanzveranstaltung_query_vars'));
+		add_action('wp_enqueue_scripts', array( $this, 'theme_enqueue_scripts'));
 		
 
 
@@ -104,6 +105,7 @@ class traumtaenzer_Public {
 		 */
 
 		wp_enqueue_script( $this->traumtaenzer, plugin_dir_url( __FILE__ ) . 'js/traumtaenzer-public.js', array( 'jquery' ), $this->version, false );
+		//wp_localize_script( 'ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'we_value' => 1234 ) );
 
 	}
 
@@ -121,42 +123,7 @@ class traumtaenzer_Public {
 		<button type="button" id="traumtaenzer_submit" onclick="traumtaenzer_submit_form()">Submit</button> 
 		</form>
 		<script type="text/javascript">
-		     //jQuery('#traumtaenzer_submit').submit(function(){ 
-		    /*jQuery("#traumtaenzer_submit").click(function(){
-		       // alert('submitted');
-		        add_music_wish();
-		     
-		  });  */ 
-		function add_music_wish(){
-
-		    mw_name = jQuery('input[name=mw_name]').val();
-		    mw_email = jQuery('input[name=mw_email]').val();
-		    xmusic = jQuery('input[name=3xmusic]').val();
-
-		    
-		     jQuery.ajax({
-		         type : "post",
-		         dataType : "json",
-		         url : "<?php echo admin_url('admin-ajax.php');?>",
-		         data : {
-		                    action: "mw_music",
-		                    nonce:  "<?php echo wp_create_nonce( "unique_id_nonce" );?>",
-		                    mw_name: mw_name,
-		                    mw_email: mw_email,
-		                    xmusic: xmusic
-		                },
-		         success: function(response) {
-		            console.log('complated');
-		            thnxmsg = '<?php echo get_option( "tanzveranstaltung_options")["option_custom_message"]; ?>';
-		            if(thnxmsg==''){ thnxmsg = 'Thank you. Your wish has been added for this page';}
-		            jQuery('#message_wish').html(thnxmsg);
-		            jQuery('#message_wish').show(500);
-		            setTimeout(function(){ jQuery('#message_wish').hide(500);},5000);
-		            jQuery('#traumtaenzer_form').trigger("reset");
-		         }
-		      })
-		}
-		jQuery("#traumtaenzer_form").keydown(function(e){
+			jQuery("#traumtaenzer_form").keydown(function(e){
 		        document.onkeypress = keyPress;
 		        function keyPress(e){
 		            var x = e || window.event;
@@ -312,6 +279,19 @@ public function ttfindVeranst($atts)
 			veranst
 			WHERE (veranst.anzeigen = 1) and veranst.`index` = "' . $veranstindex . '"');
 			    return $query;
+	}
+	public function theme_enqueue_scripts() {
+	    /**
+	     * frontend ajax requests.
+	     */
+	    wp_enqueue_script( 'frontend-ajax', JS_DIR_URI . 'frontend-ajax.js', array('jquery'), null, true );
+	    wp_localize_script( 'frontend-ajax', 'tanzveranstaltung_object',
+	        array( 
+	            'ajaxurl' => admin_url( 'admin-ajax.php' ),
+	            'nonce' => wp_create_nonce( "unique_id_nonce" ),
+	            'thnxmsg' => get_option( "tanzveranstaltung_options")["option_custom_message"],
+	        )
+	    );
 	}
 
 	

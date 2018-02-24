@@ -33,7 +33,9 @@
 	 * Although scripts in the WordPress core, Plugins and Themes may be
 	 * practising this, we should strive to set a better example in our own work.
 	 */
-//console.log('readysdsdsd');
+console.log('readysdsdsd');
+
+
 })( jQuery );
 	/*function check(){
 	 	alert('hiiii');
@@ -68,6 +70,37 @@
 	 	
 	 };
 
+	 function add_music_wish(){
+
+		    mw_name = jQuery('input[name=mw_name]').val();
+		    mw_email = jQuery('input[name=mw_email]').val();
+		    xmusic = jQuery('input[name=3xmusic]').val();
+
+		    
+		     jQuery.ajax({
+		         type : "post",
+		         dataType : "json",
+		         url : tanzveranstaltung_object.ajaxurl,
+		         data : {
+		                    action: "mw_music",
+		                    nonce:  tanzveranstaltung_object.nonce,
+		                    mw_name: mw_name,
+		                    mw_email: mw_email,
+		                    xmusic: xmusic
+		                },
+		         success: function(response) {
+		            console.log('complated');
+		            thnxmsg = tanzveranstaltung_object.thnxmsg;
+		            if(thnxmsg==''){ thnxmsg = 'Thank you. Your wish has been added for this page';}
+		            jQuery('#message_wish').html(thnxmsg);
+		            jQuery('#message_wish').show(500);
+		            setTimeout(function(){ jQuery('#message_wish').hide(500);},5000);
+		            jQuery('#traumtaenzer_form').trigger("reset");
+		         }
+		      })
+		}
+
+		
 	 /*if(mw_email =='' || mw_name == '' || xmusic == ''){
 	 	 		jQuery('#traumtaenzer_error').html('All fill all details.');
 	 	 		jQuery('#traumtaenzer_error').show(500);
