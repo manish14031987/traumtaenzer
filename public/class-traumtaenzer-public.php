@@ -115,35 +115,19 @@ class traumtaenzer_Public {
 
 	
 
-	public function form_creation($attr) {
-		$html = '';
-		$html .='
-		<h3 style="font-weight: bold;">Add music wish for event index'. $attr['event_id'].' </h3>
-		<div id="traumtaenzer_error" style="display: none;color: red;"></div>
-		<div id="message_wish" style="display: none;color: green;"></div>
-		<form method="post" id="traumtaenzer_form">
-		<div class="form-group"><label>Name:</label> <input type="text" name="mw_name" id="mw_name" ></div>
-		<div class="form-group"><label>Email:</label> <input type="text" name="mw_email"  id="mw_email"></div>
-		<div class="form-group"><label>3X Music:</label> <input type="text" name="3xmusic" id="3xmusic" ><input type="hidden" name="event_id" id="event_id" value="'.$attr['event_id'].'" ></div>
-		<button type="button" id="traumtaenzer_submit" onclick="traumtaenzer_submit_form()">Submit</button> 
-		</form>
-		<script type="text/javascript">
-			jQuery("#traumtaenzer_form").keydown(function(e){
-		        document.onkeypress = keyPress;
-		        function keyPress(e){
-		            var x = e || window.event;
-		            var key = (x.keyCode || x.which);       
-		            if(key == 13 || key == 3){
-		                var button_value = jQuery("input:button").val();
-		                 traumtaenzer_submit_form();
-		                
-		            }
-		        }
-		    });
-
-		</script>';
-	return $html;
+	/*
+	 * TANZVERANSTALTUNG URL-REWRITE
+	 */
+	//wp-root/tanzveranstaltung/<jahr>/<monat>/<tag>/<bezeichnung>-<index>
+	public function tanzveranstaltung_custom_rewrite_basic()
+	{
+		$tanzveranstaltung_page_id = get_option('tanzveranstaltung_page_id');
+	    global $tanzveranstaltung_page_id;
+	    add_rewrite_rule('^tanzveranstaltung/([0-9]+)/([0-9]+)/([0-9]+)/(\w+)\-([0-9]+)/?', 'index.php?page_id=' . $tanzveranstaltung_page_id . '&vjahr=$matches[1]&vmonat=$matches[2]&vtag=$matches[3]&vbezeichnung=$matches[4]&vindex=$matches[5]', 'top');
 	}
+
+
+	
 
 public function init_form($attr){
 	?>
@@ -168,7 +152,57 @@ public function init_form($attr){
 		</script>
 		<?php
 	}
+	public function tt_veranstaltung_shortcode($atts)
+	{
+	    $atts = array(
+	        'veranstjahr' => get_query_var('vjahr'),
+	        'veranstmonat' => get_query_var('vmonat'),
+	        'veransttag' => get_query_var('vtag'),
+	        'veranstbezeichnung' => str_replace('_', ' ', get_query_var('vbezeichnung')),
+	        'veranstindex' => get_query_var('vindex')
+	    );
+	   // return $atts['musikwuensche_page_id'];
+	    global $wochentage;
+	    $veranst = ttfindVeranst($atts);
+	    if (empty($veranst)) {
+	        return 'Nichts gefunden';
+	    } else {
+
+	        return $veranst[0]->titel1;
+
+	    }
+	}
+
 	
+	public function form_creation($attr) {
+			$html = '';
+			$html .='
+			<h3 style="font-weight: bold;">Add music wish for event index'. $attr['event_id'].' </h3>
+			<div id="traumtaenzer_error" style="display: none;color: red;"></div>
+			<div id="message_wish" style="display: none;color: green;"></div>
+			<form method="post" id="traumtaenzer_form">
+			<div class="form-group"><label>Name:</label> <input type="text" name="mw_name" id="mw_name" ></div>
+			<div class="form-group"><label>Email:</label> <input type="text" name="mw_email"  id="mw_email"></div>
+			<div class="form-group"><label>3X Music:</label> <input type="text" name="3xmusic" id="3xmusic" ><input type="hidden" name="event_id" id="event_id" value="'.$attr['event_id'].'" ></div>
+			<button type="button" id="traumtaenzer_submit" onclick="traumtaenzer_submit_form()">Submit</button> 
+			</form>
+			<script type="text/javascript">
+				jQuery("#traumtaenzer_form").keydown(function(e){
+			        document.onkeypress = keyPress;
+			        function keyPress(e){
+			            var x = e || window.event;
+			            var key = (x.keyCode || x.which);       
+			            if(key == 13 || key == 3){
+			                var button_value = jQuery("input:button").val();
+			                 traumtaenzer_submit_form();
+			                
+			            }
+			        }
+			    });
+
+			</script>';
+		return $html;
+		}
  public function all_wishes($attr){
     global $wpdb;
 	   $event_id = $attr['event'];
@@ -219,18 +253,6 @@ public function init_form($attr){
 
 	
 
-	/*
-	 * TANZVERANSTALTUNG URL-REWRITE
-	 */
-	//wp-root/tanzveranstaltung/<jahr>/<monat>/<tag>/<bezeichnung>-<index>
-	public function tanzveranstaltung_custom_rewrite_basic()
-	{
-		$tanzveranstaltung_page_id = get_option('tanzveranstaltung_page_id');
-	    global $tanzveranstaltung_page_id;
-	    add_rewrite_rule('^tanzveranstaltung/([0-9]+)/([0-9]+)/([0-9]+)/(\w+)\-([0-9]+)/?', 'index.php?page_id=' . $tanzveranstaltung_page_id . '&vjahr=$matches[1]&vmonat=$matches[2]&vtag=$matches[3]&vbezeichnung=$matches[4]&vindex=$matches[5]', 'top');
-	}
-
-
 
 	/*
 	 * Custom permalink tags for get_query_var function
@@ -249,26 +271,6 @@ public function init_form($attr){
 	 * END TANZVERANSTALTUNG URL-REWRITE
 	 */
 
-	public function tt_veranstaltung_shortcode($atts)
-	{
-	    $atts = array(
-	        'veranstjahr' => get_query_var('vjahr'),
-	        'veranstmonat' => get_query_var('vmonat'),
-	        'veransttag' => get_query_var('vtag'),
-	        'veranstbezeichnung' => str_replace('_', ' ', get_query_var('vbezeichnung')),
-	        'veranstindex' => get_query_var('vindex')
-	    );
-	   // return $atts['musikwuensche_page_id'];
-	    global $wochentage;
-	    $veranst = ttfindVeranst($atts);
-	    if (empty($veranst)) {
-	        return 'Nichts gefunden';
-	    } else {
-
-	        return $veranst[0]->titel1;
-
-	    }
-	}
 
 public function ttfindVeranst($atts)
 	{

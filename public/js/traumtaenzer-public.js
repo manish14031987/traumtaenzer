@@ -38,37 +38,7 @@
 	/*function check(){
 	 	alert('hiiii');
 	 }*/
-	 function traumtaenzer_submit_form(){
-
-	 	mw_name = jQuery('#mw_name').val();
-	 	mw_email = jQuery('#mw_email').val();
-	 	xmusic = jQuery('#3xmusic').val();
-	 	jQuery('#traumtaenzer_form input').removeClass('traumtaenzer_error');
-	 	flag = true;
-	 	if(mw_name == '')
-	 	{
-	 		jQuery('#mw_name').addClass('traumtaenzer_error');
-	 		flag = false;
-	 	}
-	 	if(mw_email == '')
-	 	{
-	 		jQuery('#mw_email').addClass('traumtaenzer_error');
-	 		flag = false;
-
-	 	}
-	 	if(xmusic == '')
-	 	{
-	 		jQuery('#3xmusic').addClass('traumtaenzer_error');
-	 		flag = false;
-	 	}
-	 	if(flag)
-	 	{
-	 		add_music_wish();
-	 	}
-	 	
-	 };
-
-	 function add_music_wish(){
+	  function add_music_wish(){
 
 		    mw_name = jQuery('input[name=mw_name]').val();
 		    mw_email = jQuery('input[name=mw_email]').val();
@@ -99,7 +69,37 @@
 		         }
 		      })
 		}
-		
+		function traumtaenzer_submit_form(){
+
+	 	mw_name = jQuery('#mw_name').val();
+	 	mw_email = jQuery('#mw_email').val();
+	 	xmusic = jQuery('#3xmusic').val();
+	 	jQuery('#traumtaenzer_form input').removeClass('traumtaenzer_error');
+	 	flag = true;
+	 	if(mw_name == '')
+	 	{
+	 		jQuery('#mw_name').addClass('traumtaenzer_error');
+	 		flag = false;
+	 	}
+	 	if(mw_email == '')
+	 	{
+	 		jQuery('#mw_email').addClass('traumtaenzer_error');
+	 		flag = false;
+
+	 	}
+	 	if(xmusic == '')
+	 	{
+	 		jQuery('#3xmusic').addClass('traumtaenzer_error');
+	 		flag = false;
+	 	}
+	 	if(flag)
+	 	{
+	 		add_music_wish();
+	 	}
+	 	
+	 };
+
+	
 	 /*if(mw_email =='' || mw_name == '' || xmusic == ''){
 	 	 		jQuery('#traumtaenzer_error').html('All fill all details.');
 	 	 		jQuery('#traumtaenzer_error').show(500);

@@ -53,9 +53,7 @@ class traumtaenzer_Admin {
 		$this->version = $version;
 		add_action( 'admin_menu', array( $this, 'extra_post_info_menu' ));
 		add_action( 'admin_init', array( $this, 'prfx_register_settings'));
-		//add_action( 'admin_data',array( $this, 'extra_post_info_page' ));
 		
-
 	}
 
 	/**
@@ -105,10 +103,21 @@ class traumtaenzer_Admin {
 		wp_enqueue_script( $this->traumtaenzer, plugin_dir_url( __FILE__ ) . 'js/traumtaenzer-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
-	public function admin_data() {
-		return 'hello this is admin data';
+		// function for registering prfx setting options
+	public	function prfx_register_settings() {
+		  register_setting( 'prfx-settings-group', 'tanzveranstaltung_options', 'prfx_sanitize_options' );
 		}
 
+		
+
+	
+	public	function prfx_sanitize_options( $input ) {
+		  $input['option_display_mode'] = wp_filter_nohtml_kses( $input['option_display_mode'] );
+		  $input['option_font_size'] = sanitize_text_field( absint( $input['option_font_size'] ) );
+		  $input['option_font_color'] = sanitize_text_field( $input['option_font_color'] );
+		  $input['option_custom_css'] = esc_textarea( $input['option_custom_css'] );
+		  return $input;
+		}
 
 	public function extra_post_info_menu(){
 
@@ -129,24 +138,10 @@ class traumtaenzer_Admin {
 		                 $position );
 	}
 
-	public	function prfx_sanitize_options( $input ) {
-		  $input['option_display_mode'] = wp_filter_nohtml_kses( $input['option_display_mode'] );
-		  $input['option_font_size'] = sanitize_text_field( absint( $input['option_font_size'] ) );
-		  $input['option_font_color'] = sanitize_text_field( $input['option_font_color'] );
-		  $input['option_custom_css'] = esc_textarea( $input['option_custom_css'] );
-		  return $input;
-		}
-
 	
 		// action for registering setting options
 		
-		// function for registering prfx setting options
-	public	function prfx_register_settings() {
-		  register_setting( 'prfx-settings-group', 'tanzveranstaltung_options', 'prfx_sanitize_options' );
-		}
-
-		
-
+	
 
 
 		

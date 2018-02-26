@@ -102,6 +102,19 @@ function add_mw_music() {
 
 
 
+
+
+
+add_action( 'wp_ajax_mw_event_id', 'mw_event_id' );
+
+function mw_event_id() {
+  // echo "string";
+  echo do_shortcode( '[traumtaenzer_form event_id="'.$_REQUEST['event_id'].'"]' );
+  die();
+   
+}
+
+
 function extra_post_info_page(){
 ?>
  <div class="wrap">
@@ -139,15 +152,4 @@ function extra_post_info_page(){
 </div>
 <?php
 //  admin_data();
-}
-
-
-
-add_action( 'wp_ajax_mw_event_id', 'mw_event_id' );
-
-function mw_event_id() {
-  // echo "string";
-  echo do_shortcode( '[traumtaenzer_form event_id="'.$_REQUEST['event_id'].'"]' );
-  die();
-   
 }
